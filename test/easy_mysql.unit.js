@@ -185,7 +185,7 @@ module.exports = testCase({
             "with params": function (test) {
                 var self = this;
                 var sql = "select * from widgets where name = ?";
-                self.easy.find_all(sql, ['bob'], function (err, results) {
+                self.easy.get_all(sql, ['bob'], function (err, results) {
                     check_err(err, test);
                     test.strictEqual(err, null);
                     test.ok(Array.isArray(results));
@@ -197,7 +197,7 @@ module.exports = testCase({
             "without params": function (test) {
                 var self = this;
                 var sql = "select name from widgets order by name desc";
-                self.easy.find_all(sql, function (err, results) {
+                self.easy.findAll(sql, function (err, results) {
                     check_err(err, test);
                     test.strictEqual(err, null);
                     test.ok(Array.isArray(results));
