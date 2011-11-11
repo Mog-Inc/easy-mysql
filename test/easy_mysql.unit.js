@@ -3,7 +3,7 @@ var common    = require('./common');
 var settings  = common.settings;
 var EasyMySQL = require('../lib/easy_mysql');
 var mysql     = require('mysql');
-var clone     = require('./clone');
+var clone     = common.clone;
 
 var db = settings.database;
 
