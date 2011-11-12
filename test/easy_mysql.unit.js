@@ -2,47 +2,9 @@ var testCase   = require('nodeunit').testCase;
 var common     = require('./common');
 var settings   = common.settings;
 var EasyMySQL  = require('../lib/easy_mysql');
-var mysql      = require('mysql');
-var clone      = common.clone;
 var mysql_pool = require('../lib/pool');
-
-var db = settings.database;
-
-function get_settings() {
-    return settings;
-}
-
-function check_err(err, test) {
-    if (err) {
-        if (test) {
-            test.ok(false);
-        }
-        throw new Error(err);
-    }
-}
-
-
-var table_sql = "create table widgets( " +
-                "id int auto_increment primary key, " +
-                "name varchar(25)) ";
-
-function setup_db(cb) {
-    var _settings = clone(settings);
-    delete _settings.database;
-    var client = mysql.createClient(_settings);
-
-    client.query('CREATE DATABASE ' + db, function (err) {
-        if (err && err.number != mysql.ERROR_DB_CREATE_EXISTS) {
-            throw err;
-        }
-    });
-    client.query('USE ' + db);
-    client.query('drop table if exists widgets');
-    client.query(table_sql, function (err) {
-        check_err(err);
-        cb(null, true);
-    });
-}
+var check_err  = common.check_err;
+var setup_db   = common.setup_db;
 
 module.exports = testCase({
     setUp: function (callback) {
