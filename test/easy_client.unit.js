@@ -1,4 +1,5 @@
 var testCase   = require('nodeunit').testCase;
+var sinon      = require('sinon');
 var common     = require('./common');
 var settings   = common.settings;
 var EasyClient = require('../lib/easy_client');
@@ -15,7 +16,7 @@ module.exports = testCase({
         });
     },
 
-    "connecting": testCase({
+    "EasyClient.create": testCase({
         "directly": function (test) {
             EasyClient.create(settings, function (err, easy_client) {
                 check_err(err, test);
@@ -23,6 +24,7 @@ module.exports = testCase({
                 test.equal(easy_client.client.password, settings.password);
                 test.equal(easy_client.client.port, settings.port);
                 test.equal(easy_client.client.database, settings.database);
+                easy_client.end();
                 test.done();
             });
         },
@@ -35,8 +37,39 @@ module.exports = testCase({
                 test.equal(easy_client.client.password, settings.password);
                 test.equal(easy_client.client.port, settings.port);
                 test.equal(easy_client.client.database, settings.database);
+                easy_client.end();
                 test.done();
             });
         }
+    }),
+
+    "end() method": testCase({
+        "single client": testCase({
+            "disconnects from socket": function (test) {
+                EasyClient.create(settings, function (err, easy_client) {
+                    check_err(err, test);
+                    easy_client.end();
+
+                    setTimeout(function () {
+                        test.strictEqual(easy_client.client._socket.destroyed, true);
+                    }, 20);
+                    test.done();
+                });
+            }
+        }),
+
+        "generic pool object": testCase({
+            "releases client back to pool": function (test) {
+                var pool = mysql_pool.get(settings);
+                var mock = sinon.mock(pool);
+                mock.expects("release");
+                EasyClient.create({pool: pool}, function (err, easy_client) {
+                    check_err(err, test);
+                    easy_client.end();
+                    mock.verify();
+                    test.done();
+                });
+            }
+        })
     })
 });
