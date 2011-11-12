@@ -1,9 +1,10 @@
 var testCase   = require('nodeunit').testCase;
 var sinon      = require('sinon');
-var common     = require('./common');
-var settings   = common.settings;
 var EasyClient = require('../lib/easy_client');
 var mysql_pool = require('../lib/pool');
+var common     = require('./common');
+var settings   = common.settings;
+var clone      = common.clone;
 var check_err  = common.check_err;
 var setup_db   = common.setup_db;
 
@@ -30,13 +31,28 @@ module.exports = testCase({
         },
 
         "passing in a generic pool object": function (test) {
-            var pool = mysql_pool.get(settings);
+            var pool = mysql_pool.create(settings);
             EasyClient.create({pool: pool}, function (err, easy_client) {
                 check_err(err, test);
                 test.equal(easy_client.client.user, settings.user);
                 test.equal(easy_client.client.password, settings.password);
                 test.equal(easy_client.client.port, settings.port);
                 test.equal(easy_client.client.database, settings.database);
+                easy_client.end();
+                test.done();
+            });
+        },
+
+        "using built-in pool": function (test) {
+            var _settings = clone(settings);
+            _settings.pool_size = 3;
+            EasyClient.create(_settings, function (err, easy_client) {
+                check_err(err, test);
+                test.equal(easy_client.client.user, settings.user);
+                test.equal(easy_client.client.password, settings.password);
+                test.equal(easy_client.client.port, settings.port);
+                test.equal(easy_client.client.database, settings.database);
+                test.ok(easy_client.pool);
                 easy_client.end();
                 test.done();
             });
@@ -60,7 +76,7 @@ module.exports = testCase({
 
         "generic pool object": testCase({
             "releases client back to pool": function (test) {
-                var pool = mysql_pool.get(settings);
+                var pool = mysql_pool.create(settings);
                 var mock = sinon.mock(pool);
                 mock.expects("release");
                 EasyClient.create({pool: pool}, function (err, easy_client) {

@@ -54,3 +54,4 @@ exports.check_err = check_err;
 exports.setup_db  = setup_db;
 exports.database  = 'easy_mysql_test';
 exports.settings  = settings;
+exports.clone     = clone;
