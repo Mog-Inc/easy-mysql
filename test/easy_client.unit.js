@@ -17,9 +17,9 @@ module.exports = testCase({
         });
     },
 
-    "EasyClient.create": testCase({
+    "EasyClient.fetch": testCase({
         "directly": function (test) {
-            EasyClient.create(settings, function (err, easy_client) {
+            EasyClient.fetch(settings, function (err, easy_client) {
                 check_err(err, test);
                 test.equal(easy_client.client.user, settings.user);
                 test.equal(easy_client.client.password, settings.password);
@@ -31,8 +31,8 @@ module.exports = testCase({
         },
 
         "passing in a generic pool object": function (test) {
-            var pool = easy_pool.create(settings);
-            EasyClient.create({pool: pool}, function (err, easy_client) {
+            var pool = easy_pool.fetch(settings);
+            EasyClient.fetch({pool: pool}, function (err, easy_client) {
                 check_err(err, test);
                 test.equal(easy_client.client.user, settings.user);
                 test.equal(easy_client.client.password, settings.password);
@@ -47,7 +47,7 @@ module.exports = testCase({
             var _settings = clone(settings);
             _settings.pool_size = 3;
             _settings.use_easy_pool = true;
-            EasyClient.create(_settings, function (err, easy_client) {
+            EasyClient.fetch(_settings, function (err, easy_client) {
                 check_err(err, test);
                 test.equal(easy_client.client.user, settings.user);
                 test.equal(easy_client.client.password, settings.password);
@@ -63,7 +63,7 @@ module.exports = testCase({
     "end() method": testCase({
         "single client": testCase({
             "disconnects from socket": function (test) {
-                EasyClient.create(settings, function (err, easy_client) {
+                EasyClient.fetch(settings, function (err, easy_client) {
                     check_err(err, test);
                     easy_client.end();
 
@@ -77,10 +77,10 @@ module.exports = testCase({
 
         "generic pool object": testCase({
             "releases client back to pool": function (test) {
-                var pool = easy_pool.create(settings);
+                var pool = easy_pool.fetch(settings);
                 var mock = sinon.mock(pool);
                 mock.expects("release");
-                EasyClient.create({pool: pool}, function (err, easy_client) {
+                EasyClient.fetch({pool: pool}, function (err, easy_client) {
                     check_err(err, test);
                     easy_client.end();
                     mock.verify();

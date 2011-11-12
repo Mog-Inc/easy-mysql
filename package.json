@@ -1,10 +1,10 @@
 {
   "name"        : "easy-mysql",
-  "description" : "Light MySQL query wrapper",
+  "description" : "Light MySQL query wrapper with connection pooling.",
   "version"     : "0.0.1",
   "author"      : "Bryan Donovan <bdondo@gmail.com>",
   "contributors": [
-    { "name": "Bryan Donovan", "email": "bdondo@gmail.com.com" }
+    { "name": "Bryan Donovan", "email": "bdondo@gmail.com" }
   ],
   "dependencies": {
     "generic-pool" : "1.0.6",
@@ -13,7 +13,8 @@
   "devDependencies": {
     "nodeunit" : "0.6.2",
     "sinon"    : ">=1.2.0",
-    "jshint"   : ">=0.5.2"
+    "jshint"   : ">=0.5.2",
+    "jsdoc"    : ">=0.0.0."
   },
   "keywords" : ["mysql", "nodejs"],
   "main"     : "index",

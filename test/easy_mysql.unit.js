@@ -189,7 +189,7 @@ module.exports = testCase({
             "valid queries": testCase({
                 "with params": function (test) {
                     var self = this;
-                    var pool = easy_pool.create(settings);
+                    var pool = easy_pool.fetch(settings);
                     self.easy = new EasyMySQL({pool: pool});
                     var sql = "insert into widgets(name) values (?)";
 
