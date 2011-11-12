@@ -1,10 +1,10 @@
-var testCase   = require('nodeunit').testCase;
-var common     = require('./common');
-var settings   = common.settings;
-var EasyMySQL  = require('../lib/easy_mysql');
-var mysql_pool = require('../lib/pool');
-var check_err  = common.check_err;
-var setup_db   = common.setup_db;
+var testCase  = require('nodeunit').testCase;
+var common    = require('./common');
+var settings  = common.settings;
+var EasyMySQL = require('../lib/easy_mysql');
+var easy_pool = require('../lib/easy_pool');
+var check_err = common.check_err;
+var setup_db  = common.setup_db;
 
 module.exports = testCase({
     setUp: function (callback) {
@@ -189,7 +189,7 @@ module.exports = testCase({
             "valid queries": testCase({
                 "with params": function (test) {
                     var self = this;
-                    var pool = mysql_pool.create(settings);
+                    var pool = easy_pool.create(settings);
                     self.easy = new EasyMySQL({pool: pool});
                     var sql = "insert into widgets(name) values (?)";
 

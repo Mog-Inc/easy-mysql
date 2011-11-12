@@ -1,7 +1,7 @@
 var testCase   = require('nodeunit').testCase;
 var sinon      = require('sinon');
 var EasyClient = require('../lib/easy_client');
-var mysql_pool = require('../lib/pool');
+var easy_pool  = require('../lib/easy_pool');
 var common     = require('./common');
 var settings   = common.settings;
 var clone      = common.clone;
@@ -31,7 +31,7 @@ module.exports = testCase({
         },
 
         "passing in a generic pool object": function (test) {
-            var pool = mysql_pool.create(settings);
+            var pool = easy_pool.create(settings);
             EasyClient.create({pool: pool}, function (err, easy_client) {
                 check_err(err, test);
                 test.equal(easy_client.client.user, settings.user);
@@ -46,6 +46,7 @@ module.exports = testCase({
         "using built-in pool": function (test) {
             var _settings = clone(settings);
             _settings.pool_size = 3;
+            _settings.use_easy_pool = true;
             EasyClient.create(_settings, function (err, easy_client) {
                 check_err(err, test);
                 test.equal(easy_client.client.user, settings.user);
@@ -76,7 +77,7 @@ module.exports = testCase({
 
         "generic pool object": testCase({
             "releases client back to pool": function (test) {
-                var pool = mysql_pool.create(settings);
+                var pool = easy_pool.create(settings);
                 var mock = sinon.mock(pool);
                 mock.expects("release");
                 EasyClient.create({pool: pool}, function (err, easy_client) {
