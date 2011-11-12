@@ -1,9 +1,10 @@
-var testCase  = require('nodeunit').testCase;
-var common    = require('./common');
-var settings  = common.settings;
-var EasyMySQL = require('../lib/easy_mysql');
-var mysql     = require('mysql');
-var clone     = common.clone;
+var testCase   = require('nodeunit').testCase;
+var common     = require('./common');
+var settings   = common.settings;
+var EasyMySQL  = require('../lib/easy_mysql');
+var mysql      = require('mysql');
+var clone      = common.clone;
+var mysql_pool = require('../lib/pool');
 
 var db = settings.database;
 
@@ -50,18 +51,6 @@ module.exports = testCase({
             check_err(err);
             self.easy = new EasyMySQL(settings);
             callback();
-        });
-    },
-
-    "connecting": function (test) {
-        var easy = new EasyMySQL(settings);
-        easy._connect(function (err, client) {
-            check_err(err, test);
-            test.equal(client.user, settings.user);
-            test.equal(client.password, settings.password);
-            test.equal(client.port, settings.port);
-            test.equal(client.database, settings.database);
-            test.done();
         });
     },
 
@@ -113,7 +102,7 @@ module.exports = testCase({
         })
     }),
 
-    "find_one": testCase({
+    "get_one": testCase({
         setUp: function (callback) {
             var self = this;
             var sql = "insert into widgets(name) values ('bob'), ('jim')";
@@ -127,7 +116,7 @@ module.exports = testCase({
             "with params": function (test) {
                 var self = this;
                 var sql = "select * from widgets where name = ?";
-                self.easy.find_one(sql, ['bob'], function (err, result) {
+                self.easy.get_one(sql, ['bob'], function (err, result) {
                     check_err(err, test);
                     test.strictEqual(err, null);
                     test.equal(result.name, 'bob');
@@ -138,7 +127,7 @@ module.exports = testCase({
             "without params": function (test) {
                 var self = this;
                 var sql = "select name from widgets order by name desc limit 1";
-                self.easy.find_one(sql, function (err, result) {
+                self.easy.get_one(sql, function (err, result) {
                     check_err(err, test);
                     test.strictEqual(err, null);
                     test.equal(result.name, 'jim');
@@ -149,7 +138,7 @@ module.exports = testCase({
             "no results - returns null": function (test) {
                 var self = this;
                 var sql = "select * from widgets where name = ?";
-                self.easy.find_one(sql, ['not real'], function (err, result) {
+                self.easy.get_one(sql, ['not real'], function (err, result) {
                     check_err(err, test);
                     test.strictEqual(err, null);
                     test.strictEqual(result, null);
@@ -162,7 +151,7 @@ module.exports = testCase({
             "calls callback with error": function (test) {
                 var self = this;
                 var sql = "BOGUSselect * from widgets";
-                self.easy.find_one(sql, function (err, result) {
+                self.easy.get_one(sql, function (err, result) {
                     test.ok(err instanceof Error);
                     test.strictEqual(result, null);
                     test.done();
@@ -171,7 +160,7 @@ module.exports = testCase({
         })
     }),
 
-    "find_all": testCase({
+    "get_all": testCase({
         setUp: function (callback) {
             var self = this;
             var sql = "insert into widgets(name) values ('bob'), ('jim')";
@@ -197,7 +186,7 @@ module.exports = testCase({
             "without params": function (test) {
                 var self = this;
                 var sql = "select name from widgets order by name desc";
-                self.easy.findAll(sql, function (err, results) {
+                self.easy.getAll(sql, function (err, results) {
                     check_err(err, test);
                     test.strictEqual(err, null);
                     test.ok(Array.isArray(results));
@@ -210,7 +199,7 @@ module.exports = testCase({
             "no results - returns empty array": function (test) {
                 var self = this;
                 var sql = "select * from widgets where name = ?";
-                self.easy.find_all(sql, ['not real'], function (err, results) {
+                self.easy.get_all(sql, ['not real'], function (err, results) {
                     check_err(err, test);
                     test.strictEqual(err, null);
                     test.ok(Array.isArray(results));
@@ -224,12 +213,34 @@ module.exports = testCase({
             "calls callback with error": function (test) {
                 var self = this;
                 var sql = "BOGUSselect * from widgets";
-                self.easy.find_all(sql, function (err, results) {
+                self.easy.get_all(sql, function (err, results) {
                     test.ok(err instanceof Error);
                     test.strictEqual(results, null);
                     test.done();
                 });
             }
+        })
+    }),
+
+    "passing in a generic pool object": testCase({
+        "execute": testCase({
+            "valid queries": testCase({
+                "with params": function (test) {
+                    var self = this;
+                    var sql = "insert into widgets(name) values (?)";
+
+                    self.easy.execute(sql, ['foo'], function (err, result) {
+                        check_err(err, test);
+                        test.strictEqual(err, null);
+                        test.ok(result);
+                        var sql = "select * from widgets";
+                        self.easy.execute(sql, function (err, results) {
+                            test.equal(results[0].name, 'foo');
+                            test.done();
+                        });
+                    });
+                }
+            })
         })
     })
 });
