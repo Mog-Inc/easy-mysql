@@ -1,8 +1,8 @@
 var testCase  = require('nodeunit').testCase;
-var common    = require('./common');
-var settings  = common.settings;
 var EasyMySQL = require('../lib/easy_mysql');
 var easy_pool = require('../lib/easy_pool');
+var common    = require('./common');
+var settings  = common.settings;
 var check_err = common.check_err;
 var setup_db  = common.setup_db;
 

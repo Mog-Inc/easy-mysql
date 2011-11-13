@@ -22,7 +22,7 @@ function check_err(err, test) {
 try {
     var settings = require('./settings');
 } catch (e) {
-    console.log('Skipping. See test/settings.template.js for more information.');
+    console.log('Skipping. See test/settings.example.js for more information.');
     process.exit(0);
 }
 
