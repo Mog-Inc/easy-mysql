@@ -14,7 +14,87 @@ Developed by [MOG.com](http://mog.com)
 npm install easy-mysql
 ```
 
+## Overview
+
+EasyMySQL allows you to handle MySQL connection pooling, acquiring connections, and releasing them with ease.
+For example, where you might do this (using node-pool):
+
+    var get_widget = function(id, cb) {
+        pool.acquire(function (err, client) {
+            if (err) {
+                pool.release(client);
+                cb(err, null);
+            } else {
+                var sql = 'select * from widgets where id = ?';
+                client.query(sql, [id], function (err, results) {
+                    pool.release(client);
+                    if (err || results && results.length === 0) {
+                        cb(err, null);
+                    } else {
+                        cb(null, results[0]);
+                    }
+                });
+            }
+        });
+    };
+
+...you can do this instead with EasyMySQL:
+
+    var get_widget = function(id, cb) {
+        var sql = 'select * from widgets where id = ?';
+        easy_mysql.get_one(id, sql, [id], function (err, result) {
+            cb(err, result);
+        });
+    };
+
 ## Usage
+
+### Instance methods
+
+#### get_one / getOne
+
+Returns only one result, and if no results are found, returns null.
+
+    var sql = 'select * from widgets where id = ?';
+    easy_mysql.get_one(id, sql, [123], function (err, result) {
+        cb(err, result);
+    });
+
+
+#### get_all / getAll
+
+Returns an array of results, and if no results are found, returns an empty array.
+
+    var sql = 'select * from widgets where id > ?';
+    easy_mysql.get_all(id, sql, [123], function (err, results) {
+        cb(err, results);
+    });
+
+#### execute
+
+Executes an arbitrary SQL query and returns the results from node-mysql.
+
+    var sql = 'update widgets set foo = 'bar' where id = ?';
+    easy_mysql.execute(id, sql, [123], function (err, results) {
+        cb(err, results);
+    });
+
+
+### Connection Modes
+
+You can connect three different ways with EasyMySQL:
+
+  1. Direct: Directly establish a single connection for each query.
+  This is probably not a good idea for production code, but may be fine for code
+  where you don't want to set up a pool, such as in unit tests.
+
+  2. Custom Pool: Pass in your own pool object.  It must have functions named
+  'acquire' and 'release'.
+
+  3. Built-in Pool: Use the built-in pool, which uses [node-pool](https://github.com/coopernurse/node-pool)
+
+
+#### Direct Connect Example
 
     var settings = {
           user     : 'myuser',
@@ -22,10 +102,29 @@ npm install easy-mysql
           database : 'mydb'
     };
  
-    var easy_mysql = EasyMySQL.create(settings);
-    easy_mysql.get_one("select * from foo where bar = ?", ['jazz'], function (err, result) {
-         // do stuff
-    });
+    var easy_mysql = EasyMySQL.connect(settings);
+
+#### Custom Pool Example
+
+    var my_pool = /* create your own pool here */;
+    var easy_mysql = EasyMySQL.connect_with_pool(pool);
+
+#### Built-in Pool Example
+    var settings = {
+        user      : 'myuser',
+        password  : 'mypass',
+        database  : 'mydb',
+        pool_size : 50
+    };
+
+    var easy_mysql = EasyMySQL.create_with_easy_pool(settings);
+
+
+## TODO
+
+ * Add connection chaining.
+ * Allow functions to be called with out a callback argument.
+
 
 ## License
 
