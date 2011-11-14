@@ -119,6 +119,26 @@ You can connect three different ways with EasyMySQL:
 
     var easy_mysql = EasyMySQL.create_with_easy_pool(settings);
 
+## Tests and Docs
+
+To run tests and generate docs, first run:
+
+    npm install -d
+
+Run the tests:
+
+    make test
+
+Generate JSDocs:
+
+    make doc
+
+
+## Contribute
+
+If you would like to contribute to the project, please fork it and send us a pull request.  Please add tests
+for any new features or bug fixes.  Also run ``make lint`` before submitting the pull request.
+
 
 ## TODO
 
