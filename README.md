@@ -117,7 +117,7 @@ You can connect three different ways with EasyMySQL:
         pool_size : 50
     };
 
-    var easy_mysql = EasyMySQL.create_with_easy_pool(settings);
+    var easy_mysql = EasyMySQL.connect_with_easy_pool(settings);
 
 ## Tests and Docs
 
