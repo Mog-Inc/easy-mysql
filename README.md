@@ -1,7 +1,6 @@
 Node EasyMySQL
 ==============
 
-
 ## Purpose
 
 A small collection of simple functions that make using MySQL with node.js easier. 
