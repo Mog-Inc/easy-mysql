@@ -54,7 +54,7 @@ For example, where you might do this (using node-pool):
 Returns only one result, and if no results are found, returns null.
 
     var sql = 'select * from widgets where id = ?';
-    easy_mysql.get_one(id, sql, [123], function (err, result) {
+    easy_mysql.get_one(sql, [123], function (err, result) {
         cb(err, result);
     });
 
@@ -64,7 +64,7 @@ Returns only one result, and if no results are found, returns null.
 Returns an array of results, and if no results are found, returns an empty array.
 
     var sql = 'select * from widgets where id > ?';
-    easy_mysql.get_all(id, sql, [123], function (err, results) {
+    easy_mysql.get_all(sql, [123], function (err, results) {
         cb(err, results);
     });
 
@@ -73,7 +73,7 @@ Returns an array of results, and if no results are found, returns an empty array
 Executes an arbitrary SQL query and returns the results from node-mysql.
 
     var sql = 'update widgets set foo = 'bar' where id = ?';
-    easy_mysql.execute(id, sql, [123], function (err, results) {
+    easy_mysql.execute(sql, [123], function (err, results) {
         cb(err, results);
     });
 
