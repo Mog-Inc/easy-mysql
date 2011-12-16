@@ -1,11 +1,16 @@
 {
-  "name"        : "easy-mysql",
+  "name"        : "node-easy-mysql",
   "description" : "Light MySQL query wrapper with connection pooling.",
   "version"     : "0.0.1",
-  "author"      : "Bryan Donovan <bdondo@gmail.com>",
+  "author"      : "MOG, Inc.",
   "contributors": [
-    { "name": "Bryan Donovan", "email": "bdondo@gmail.com" }
+    { "name": "Bryan Donovan" }
   ],
+  "homepage": "http://mog.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com:Mog-Inc/easy-mysql.git"
+   },
   "dependencies": {
     "generic-pool" : "1.0.6",
     "mysql"        : ">=0.9.1"
