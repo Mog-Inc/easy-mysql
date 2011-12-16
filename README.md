@@ -42,9 +42,7 @@ For example, where you might do this (using node-pool):
 
     var get_widget = function(id, cb) {
         var sql = 'select * from widgets where id = ?';
-        easy_mysql.get_one(id, sql, [id], function (err, result) {
-            cb(err, result);
-        });
+        easy_mysql.get_one(sql, [id], cb);
     };
 
 ## Usage
