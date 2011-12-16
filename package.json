@@ -1,5 +1,5 @@
 {
-  "name"        : "node-easy-mysql",
+  "name"        : "easy-mysql",
   "description" : "Light MySQL query wrapper with connection pooling.",
   "version"     : "0.0.1",
   "author"      : "MOG, Inc.",
