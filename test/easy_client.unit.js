@@ -8,7 +8,7 @@ var clone      = common.clone;
 var check_err  = common.check_err;
 var setup_db   = common.setup_db;
 
-var assert_correct_settings = function(client) {
+var assert_correct_settings = function (client) {
     assert.equal(client.user, settings.user);
     assert.equal(client.password, settings.password);
     assert.equal(client.port, settings.port);
