@@ -17,7 +17,7 @@ describe("EasyClient", function () {
     });
 
     describe("EasyClient.fetch", function () {
-        describe("directly", function () {
+        describe("connecting directly", function () {
             it("sets up single client with supplied settings", function (done) {
                 EasyClient.fetch(settings, function (err, easy_client) {
                     check_err(err);
@@ -74,8 +74,8 @@ describe("EasyClient", function () {
 
                     setTimeout(function () {
                         assert.strictEqual(easy_client.client._socket.destroyed, true);
+                        done();
                     }, 20);
-                    done();
                 });
             });
         });
