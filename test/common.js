@@ -10,11 +10,8 @@ function clone(object) {
     return ret;
 }
 
-function check_err(err, test) {
+function check_err(err) {
     if (err) {
-        if (test) {
-            test.ok(false);
-        }
         throw new Error(err);
     }
 }
