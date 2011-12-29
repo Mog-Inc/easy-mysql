@@ -8,6 +8,13 @@ var clone      = common.clone;
 var check_err  = common.check_err;
 var setup_db   = common.setup_db;
 
+var assert_correct_settings = function(client) {
+    assert.equal(client.user, settings.user);
+    assert.equal(client.password, settings.password);
+    assert.equal(client.port, settings.port);
+    assert.equal(client.database, settings.database);
+};
+
 describe("EasyClient", function () {
     beforeEach(function (done) {
         setup_db(function (err, result) {
@@ -21,10 +28,7 @@ describe("EasyClient", function () {
             it("sets up single client with supplied settings", function (done) {
                 EasyClient.fetch(settings, function (err, easy_client) {
                     check_err(err);
-                    assert.equal(easy_client.client.user, settings.user);
-                    assert.equal(easy_client.client.password, settings.password);
-                    assert.equal(easy_client.client.port, settings.port);
-                    assert.equal(easy_client.client.database, settings.database);
+                    assert_correct_settings(easy_client.client);
                     easy_client.end();
                     done();
                 });
@@ -36,10 +40,7 @@ describe("EasyClient", function () {
                 var pool = easy_pool.fetch(settings);
                 EasyClient.fetch({pool: pool}, function (err, easy_client) {
                     check_err(err);
-                    assert.equal(easy_client.client.user, settings.user);
-                    assert.equal(easy_client.client.password, settings.password);
-                    assert.equal(easy_client.client.port, settings.port);
-                    assert.equal(easy_client.client.database, settings.database);
+                    assert_correct_settings(easy_client.client);
                     easy_client.end();
                     done();
                 });
@@ -53,10 +54,7 @@ describe("EasyClient", function () {
                 _settings.use_easy_pool = true;
                 EasyClient.fetch(_settings, function (err, easy_client) {
                     check_err(err);
-                    assert.equal(easy_client.client.user, settings.user);
-                    assert.equal(easy_client.client.password, settings.password);
-                    assert.equal(easy_client.client.port, settings.port);
-                    assert.equal(easy_client.client.database, settings.database);
+                    assert_correct_settings(easy_client.client);
                     assert.ok(easy_client.pool);
                     easy_client.end();
                     done();
