@@ -200,7 +200,7 @@ describe('EasyMySQL', function () {
         describe("EasyMysql.connect_with_pool", function () {
             it("lets us execute queries", function (done) {
                 var pool = easy_pool.fetch(settings);
-                var easy = EasyMySQL.connect_with_pool(pool);
+                easy_mysql = EasyMySQL.connect_with_pool(pool);
                 var sql  = "insert into widgets(name) values (?)";
 
                 easy_mysql.execute(sql, ['foo'], function (err, result) {
@@ -219,7 +219,7 @@ describe('EasyMySQL', function () {
         describe("EasyMysql.connect_with_easy_pool", function () {
             it("lets us execute queries", function (done) {
                 var easy_pool_settings = clone(settings);
-                var easy = EasyMySQL.connect_with_easy_pool(easy_pool_settings);
+                easy_mysql = EasyMySQL.connect_with_easy_pool(easy_pool_settings);
                 var sql  = "insert into widgets(name) values (?)";
 
                 easy_mysql.execute(sql, ['foo'], function (err, result) {
