@@ -26,7 +26,10 @@
         "Buffer", 
         "logger", 
         "global",
-        "__dirname"
+        "__dirname",
+        "describe",
+        "it",
+        "beforeEach"
     ],
 
 
