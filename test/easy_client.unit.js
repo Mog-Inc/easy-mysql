@@ -1,11 +1,10 @@
 var assert     = require('assert');
 var sinon      = require('sinon');
-var EasyClient = require('../lib/easy_client');
-var easy_pool  = require('../lib/easy_pool');
 var common     = require('./common');
+var EasyClient = common.EasyClient;
+var easy_pool  = common.easy_pool;
 var settings   = common.settings;
 var clone      = common.clone;
-var check_err  = common.check_err;
 var setup_db   = common.setup_db;
 
 var assert_correct_settings = function (client) {
@@ -18,7 +17,7 @@ var assert_correct_settings = function (client) {
 describe("EasyClient", function () {
     beforeEach(function (done) {
         setup_db(function (err, result) {
-            check_err(err);
+            assert.ifError(err);
             done();
         });
     });
@@ -27,7 +26,7 @@ describe("EasyClient", function () {
         describe("connecting directly", function () {
             it("sets up single client with supplied settings", function (done) {
                 EasyClient.fetch(settings, function (err, easy_client) {
-                    check_err(err);
+                    assert.ifError(err);
                     assert_correct_settings(easy_client.client);
                     easy_client.end();
                     done();
@@ -39,7 +38,7 @@ describe("EasyClient", function () {
             it("uses clients from supplied pool", function (done) {
                 var pool = easy_pool.fetch(settings);
                 EasyClient.fetch({pool: pool}, function (err, easy_client) {
-                    check_err(err);
+                    assert.ifError(err);
                     assert_correct_settings(easy_client.client);
                     easy_client.end();
                     done();
@@ -53,7 +52,7 @@ describe("EasyClient", function () {
                 _settings.pool_size = 3;
                 _settings.use_easy_pool = true;
                 EasyClient.fetch(_settings, function (err, easy_client) {
-                    check_err(err);
+                    assert.ifError(err);
                     assert_correct_settings(easy_client.client);
                     assert.ok(easy_client.pool);
                     easy_client.end();
@@ -67,7 +66,7 @@ describe("EasyClient", function () {
         describe("when using single client", function () {
             it("disconnects from socket", function (done) {
                 EasyClient.fetch(settings, function (err, easy_client) {
-                    check_err(err);
+                    assert.ifError(err);
                     easy_client.end();
 
                     setTimeout(function () {
@@ -84,7 +83,7 @@ describe("EasyClient", function () {
                 var mock = sinon.mock(pool);
                 mock.expects("release");
                 EasyClient.fetch({pool: pool}, function (err, easy_client) {
-                    check_err(err);
+                    assert.ifError(err);
                     easy_client.end();
                     mock.verify();
                     done();

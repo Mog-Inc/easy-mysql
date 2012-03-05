@@ -1,10 +1,9 @@
 var assert    = require('assert');
-var EasyMySQL = require('../lib/easy_mysql');
-var easy_pool = require('../lib/easy_pool');
 var common    = require('./common');
+var EasyMySQL = common.EasyMySQL;
+var easy_pool = common.easy_pool;
 var settings  = common.settings;
 var clone     = common.clone;
-var check_err = common.check_err;
 var setup_db  = common.setup_db;
 
 describe('EasyMySQL', function () {
@@ -12,7 +11,7 @@ describe('EasyMySQL', function () {
 
     beforeEach(function (done) {
         setup_db(function (err, result) {
-            check_err(err);
+            assert.ifError(err);
             easy_mysql = EasyMySQL.connect(settings);
             done();
         });
@@ -25,7 +24,7 @@ describe('EasyMySQL', function () {
                     var sql = "insert into widgets(name) values (?)";
 
                     easy_mysql.execute(sql, ['foo'], function (err, result) {
-                        check_err(err);
+                        assert.ifError(err);
                         assert.strictEqual(err, null);
                         assert.ok(result);
                         var sql = "select * from widgets";
@@ -42,7 +41,7 @@ describe('EasyMySQL', function () {
                     var sql = "insert into widgets(name) values ('bob')";
 
                     easy_mysql.execute(sql, function (err, result) {
-                        check_err(err);
+                        assert.ifError(err);
                         assert.strictEqual(err, null);
                         assert.ok(result);
                         var sql = "select * from widgets";
@@ -71,7 +70,7 @@ describe('EasyMySQL', function () {
         beforeEach(function (done) {
             var sql = "insert into widgets(name) values ('bob'), ('jim')";
             easy_mysql.execute(sql, function (err, result) {
-                check_err(err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -81,7 +80,7 @@ describe('EasyMySQL', function () {
                 it("passes query and params to mysql, returns single object", function (done) {
                     var sql = "select * from widgets where name = ?";
                     easy_mysql.get_one(sql, ['bob'], function (err, result) {
-                        check_err(err);
+                        assert.ifError(err);
                         assert.strictEqual(err, null);
                         assert.equal(result.name, 'bob');
                         done();
@@ -93,7 +92,7 @@ describe('EasyMySQL', function () {
                 it("passes query to mysql, returns single object", function (done) {
                     var sql = "select name from widgets order by name desc limit 1";
                     easy_mysql.get_one(sql, function (err, result) {
-                        check_err(err);
+                        assert.ifError(err);
                         assert.strictEqual(err, null);
                         assert.equal(result.name, 'jim');
                         done();
@@ -105,7 +104,7 @@ describe('EasyMySQL', function () {
                 it("returns null", function (done) {
                     var sql = "select * from widgets where name = ?";
                     easy_mysql.get_one(sql, ['not real'], function (err, result) {
-                        check_err(err);
+                        assert.ifError(err);
                         assert.strictEqual(err, null);
                         assert.strictEqual(result, null);
                         done();
@@ -130,7 +129,7 @@ describe('EasyMySQL', function () {
         beforeEach(function (done) {
             var sql = "insert into widgets(name) values ('bob'), ('jim')";
             easy_mysql.execute(sql, function (err, result) {
-                check_err(err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -140,7 +139,7 @@ describe('EasyMySQL', function () {
                 it("passes query and params to mysql, returns results array", function (done) {
                     var sql = "select * from widgets where name = ?";
                     easy_mysql.get_all(sql, ['bob'], function (err, results) {
-                        check_err(err);
+                        assert.ifError(err);
                         assert.strictEqual(err, null);
                         assert.ok(Array.isArray(results));
                         assert.equal(results[0].name, 'bob');
@@ -153,7 +152,7 @@ describe('EasyMySQL', function () {
                 it("passes query to mysql, returns results array", function (done) {
                     var sql = "select name from widgets order by name desc";
                     easy_mysql.getAll(sql, function (err, results) {
-                        check_err(err);
+                        assert.ifError(err);
                         assert.strictEqual(err, null);
                         assert.ok(Array.isArray(results));
                         assert.equal(results.length, 2);
@@ -167,7 +166,7 @@ describe('EasyMySQL', function () {
                 it("returns empty array", function (done) {
                     var sql = "select * from widgets where name = ?";
                     easy_mysql.get_all(sql, ['not real'], function (err, results) {
-                        check_err(err);
+                        assert.ifError(err);
                         assert.strictEqual(err, null);
                         assert.ok(Array.isArray(results));
                         assert.equal(results.length, 0);
@@ -192,7 +191,7 @@ describe('EasyMySQL', function () {
     describe("connecting with pools", function () {
         beforeEach(function (done) {
             setup_db(function (err, result) {
-                check_err(err);
+                assert.ifError(err);
                 done();
             });
         });
@@ -204,7 +203,7 @@ describe('EasyMySQL', function () {
                 var sql  = "insert into widgets(name) values (?)";
 
                 easy_mysql.execute(sql, ['foo'], function (err, result) {
-                    check_err(err);
+                    assert.ifError(err);
                     assert.strictEqual(err, null);
                     assert.ok(result);
                     var sql = "select * from widgets";
@@ -223,7 +222,7 @@ describe('EasyMySQL', function () {
                 var sql  = "insert into widgets(name) values (?)";
 
                 easy_mysql.execute(sql, ['foo'], function (err, result) {
-                    check_err(err);
+                    assert.ifError(err);
                     assert.strictEqual(err, null);
                     assert.ok(result);
                     var sql = "select * from widgets";

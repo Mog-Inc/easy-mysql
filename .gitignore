@@ -1,3 +1,5 @@
 node_modules
 test/settings.js
 doc
+lib-cov
+coverage.html

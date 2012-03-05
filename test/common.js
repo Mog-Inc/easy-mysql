@@ -1,6 +1,15 @@
 var path = require('path');
-require.paths.unshift(path.dirname(__dirname) + '/lib');
 var mysql = require('mysql');
+var assert = require('assert');
+
+var lib_dir = 'lib';
+if (process.env.JSCOV) {
+    lib_dir = 'lib-cov';
+}
+
+var EasyMySQL = require('../' + lib_dir + '/easy_mysql');
+var EasyClient = require('../' + lib_dir + '/easy_client');
+var easy_pool = require('../' + lib_dir + '/easy_pool');
 
 function clone(object) {
     var ret = {};
@@ -8,12 +17,6 @@ function clone(object) {
         ret[val] = object[val];
     });
     return ret;
-}
-
-function check_err(err) {
-    if (err) {
-        throw new Error(err);
-    }
 }
 
 try {
@@ -42,13 +45,15 @@ function setup_db(cb) {
     client.query('USE ' + db);
     client.query('drop table if exists widgets');
     client.query(table_sql, function (err) {
-        check_err(err);
+        assert.ifError(err);
         cb(null, true);
     });
 }
 
-exports.check_err = check_err;
-exports.setup_db  = setup_db;
-exports.database  = 'easy_mysql_test';
-exports.settings  = settings;
-exports.clone     = clone;
+exports.setup_db   = setup_db;
+exports.database   = 'easy_mysql_test';
+exports.settings   = settings;
+exports.clone      = clone;
+exports.EasyMySQL  = EasyMySQL;
+exports.EasyClient = EasyClient;
+exports.easy_pool  = easy_pool;
