@@ -12,7 +12,7 @@ describe('EasyMySQL', function () {
     beforeEach(function (done) {
         setup_db(function (err, result) {
             assert.ifError(err);
-            easy_mysql = EasyMySQL.connect(settings);
+            easy_mysql = EasyMySQL.connect(settings.db1);
             done();
         });
     });
@@ -198,7 +198,7 @@ describe('EasyMySQL', function () {
 
         describe("EasyMysql.connect_with_pool", function () {
             it("lets us execute queries", function (done) {
-                var pool = easy_pool.fetch(settings);
+                var pool = easy_pool.fetch(settings.db1);
                 easy_mysql = EasyMySQL.connect_with_pool(pool);
                 var sql  = "insert into widgets(name) values (?)";
 
@@ -217,7 +217,7 @@ describe('EasyMySQL', function () {
 
         describe("EasyMysql.connect_with_easy_pool", function () {
             it("lets us execute queries", function (done) {
-                var easy_pool_settings = clone(settings);
+                var easy_pool_settings = clone(settings.db1);
                 easy_mysql = EasyMySQL.connect_with_easy_pool(easy_pool_settings);
                 var sql  = "insert into widgets(name) values (?)";
 

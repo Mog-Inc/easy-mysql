@@ -26,14 +26,14 @@ try {
     process.exit(0);
 }
 
-var db = settings.database;
+var db = settings.db1.database;
 
 var table_sql = "create table widgets( " +
                 "id int auto_increment primary key, " +
                 "name varchar(25)) ";
 
 function setup_db(cb) {
-    var _settings = clone(settings);
+    var _settings = clone(settings.db1);
     delete _settings.database;
     var client = mysql.createClient(_settings);
 
@@ -47,10 +47,26 @@ function setup_db(cb) {
     client.query(table_sql, function (err) {
         assert.ifError(err);
         cb(null, true);
+        client.end();
+    });
+}
+
+function setup_db2(cb) {
+    var _settings = clone(settings.db2);
+    delete _settings.database;
+    var client = mysql.createClient(_settings);
+
+    client.query('CREATE DATABASE ' + settings.db2.database, function (err) {
+        if (err && err.number != mysql.ERROR_DB_CREATE_EXISTS) {
+            throw err;
+        }
+        cb(null);
+        client.end();
     });
 }
 
 exports.setup_db   = setup_db;
+exports.setup_db2  = setup_db2;
 exports.database   = 'easy_mysql_test';
 exports.settings   = settings;
 exports.clone      = clone;
