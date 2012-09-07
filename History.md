@@ -1,11 +1,14 @@
 - 0.0.1
-  initial release
+  Initial release.
 
 - 0.5.0
-  converted tests from nodeunit to mocha
+  Converted tests from nodeunit to mocha.
 
 - 0.6.0
-  added support for test coverage (via mocha). Requires jscoverage. Run with ``make test-cov``.
+  Added support for test coverage (via mocha). Requires jscoverage. Run with ``make test-cov``.
 
 - 0.6.1
-  added support for multiple pools in easy_pool. Fixes https://github.com/Mog-Inc/easy-mysql/issues/1
+  Added support for multiple pools in easy_pool. Fixes https://github.com/Mog-Inc/easy-mysql/issues/1.
+
+- 0.6.2
+  Using ENV var EASY_MYSQL_JSCOV to avoid collisions if others use the JSCOV ENV var.

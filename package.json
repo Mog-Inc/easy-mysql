@@ -1,7 +1,7 @@
 {
   "name"        : "easy-mysql",
   "description" : "Light MySQL query wrapper with connection pooling.",
-  "version"     : "0.6.1",
+  "version"     : "0.6.2",
   "author"      : "MOG, Inc.",
   "contributors": [
     { "name": "Bryan Donovan" }
