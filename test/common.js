@@ -3,7 +3,7 @@ var mysql = require('mysql');
 var assert = require('assert');
 
 var lib_dir = 'lib';
-if (process.env.JSCOV) {
+if (process.env.EASY_MYSQL_JSCOV) {
     lib_dir = 'lib-cov';
 }
 

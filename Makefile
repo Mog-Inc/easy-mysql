@@ -8,7 +8,7 @@ test:
 	./node_modules/.bin/mocha
 
 test-cov: lib-cov
-	JSCOV=1 ./node_modules/.bin/mocha --reporter html-cov > coverage.html && echo 'coverage saved to coverage.html'
+	EASY_MYSQL_JSCOV=1 ./node_modules/.bin/mocha --reporter html-cov > coverage.html && echo 'coverage saved to coverage.html'
 
 lib-cov:
 	@rm -fr ./$@
