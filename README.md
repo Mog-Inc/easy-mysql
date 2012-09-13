@@ -47,6 +47,9 @@ For example, where you might do this (using node-pool):
 
 ## Usage
 
+    // require the module
+    var easy_mysql = require('easy-mysql');
+
 ### Instance methods
 
 #### get_one / getOne
