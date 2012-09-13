@@ -48,38 +48,7 @@ For example, where you might do this (using node-pool):
 ## Usage
 
     // require the module
-    var easy_mysql = require('easy-mysql');
-
-### Instance methods
-
-#### get_one / getOne
-
-Returns only one result, and if no results are found, returns null.
-
-    var sql = 'select * from widgets where id = ?';
-    easy_mysql.get_one(sql, [123], function (err, result) {
-        cb(err, result);
-    });
-
-
-#### get_all / getAll
-
-Returns an array of results, and if no results are found, returns an empty array.
-
-    var sql = 'select * from widgets where id > ?';
-    easy_mysql.get_all(sql, [123], function (err, results) {
-        cb(err, results);
-    });
-
-#### execute
-
-Executes an arbitrary SQL query and returns the results from node-mysql.
-
-    var sql = 'update widgets set foo = 'bar' where id = ?';
-    easy_mysql.execute(sql, [123], function (err, results) {
-        cb(err, results);
-    });
-
+    var EasyMySQL = require('easy-mysql');
 
 ### Connection Modes
 
@@ -120,6 +89,37 @@ You can connect three different ways with EasyMySQL:
 
     var easy_mysql = EasyMySQL.connect_with_easy_pool(settings);
 
+
+### Instance methods
+
+#### get_one / getOne
+
+Returns only one result, and if no results are found, returns null.
+
+    var sql = 'select * from widgets where id = ?';
+    easy_mysql.get_one(sql, [123], function (err, result) {
+        cb(err, result);
+    });
+
+
+#### get_all / getAll
+
+Returns an array of results, and if no results are found, returns an empty array.
+
+    var sql = 'select * from widgets where id > ?';
+    easy_mysql.get_all(sql, [123], function (err, results) {
+        cb(err, results);
+    });
+
+#### execute
+
+Executes an arbitrary SQL query and returns the results from node-mysql.
+
+    var sql = 'update widgets set foo = 'bar' where id = ?';
+    easy_mysql.execute(sql, [123], function (err, results) {
+        cb(err, results);
+    });
+
 ## Tests and Docs
 
 To run tests and generate docs, first run:
@@ -139,12 +139,6 @@ Generate JSDocs:
 
 If you would like to contribute to the project, please fork it and send us a pull request.  Please add tests
 for any new features or bug fixes.  Also run ``make lint`` before submitting the pull request.
-
-
-## TODO
-
- * Add connection chaining.
- * Allow functions to be called with out a callback argument.
 
 
 ## License
