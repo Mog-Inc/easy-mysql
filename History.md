@@ -15,3 +15,6 @@
 
 - 0.6.3
   Adding alias methods all(), one(), and query(). Bit more test coverage.
+
+- 0.6.4
+  Adding compatibility with node-mysql 0.9.1 (to be deprecated) and 2.0.0-alpha.
