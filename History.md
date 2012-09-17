@@ -12,3 +12,6 @@
 
 - 0.6.2
   Using ENV var EASY_MYSQL_JSCOV to avoid collisions if others use the JSCOV ENV var.
+
+- 0.6.3
+  Adding alias methods all(), one(), and query(). Bit more test coverage.
