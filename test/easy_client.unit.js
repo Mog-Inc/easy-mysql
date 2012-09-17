@@ -8,10 +8,14 @@ var clone      = common.clone;
 var setup_db   = common.setup_db;
 
 var assert_correct_settings = function (client, expected_settings) {
-    assert.equal(client.user, expected_settings.user);
-    assert.equal(client.password, expected_settings.password);
-    assert.equal(client.port, expected_settings.port);
-    assert.equal(client.database, expected_settings.database);
+    var config = client;
+    if (client.config) {
+        config = client.config;
+    }
+    assert.equal(config.user, expected_settings.user);
+    assert.equal(config.password, expected_settings.password);
+    assert.equal(config.port, expected_settings.port);
+    assert.equal(config.database, expected_settings.database);
 };
 
 describe("EasyClient", function () {
@@ -78,8 +82,18 @@ describe("EasyClient", function () {
                     EasyClient.fetch(db2_settings, function (err, easy_client2) {
                         assert.ifError(err);
 
-                        assert.equal(easy_client1.client.database, db1_settings.database);
-                        assert.equal(easy_client2.client.database, db2_settings.database);
+                        var config1 = easy_client1.client;
+                        if (easy_client1.client.config) {
+                            config1 = easy_client1.client.config;
+                        }
+
+                        var config2 = easy_client2.client;
+                        if (easy_client2.client.config) {
+                            config2 = easy_client2.client.config;
+                        }
+
+                        assert.equal(config1.database, db1_settings.database);
+                        assert.equal(config2.database, db2_settings.database);
 
                         easy_client1.end();
                         easy_client2.end();
@@ -98,7 +112,13 @@ describe("EasyClient", function () {
                     easy_client.end();
 
                     setTimeout(function () {
-                        assert.strictEqual(easy_client.client._socket.destroyed, true);
+                        var destroyed = false;
+                        try {
+                            destroyed = easy_client.client._socket.destroyed;
+                        } catch (e) {
+                            destroyed = easy_client.client._connection.destroyed;
+                        }
+                        assert.strictEqual(destroyed, true);
                         done();
                     }, 20);
                 });

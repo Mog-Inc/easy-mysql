@@ -11,6 +11,11 @@ var EasyMySQL = require('../' + lib_dir + '/easy_mysql');
 var EasyClient = require('../' + lib_dir + '/easy_client');
 var easy_pool = require('../' + lib_dir + '/easy_pool');
 
+var conn_method = 'createConnection';
+if (mysql.hasOwnProperty('createClient')) {
+    conn_method = 'createClient';
+}
+
 function clone(object) {
     var ret = {};
     Object.keys(object).forEach(function (val) {
@@ -35,33 +40,45 @@ var table_sql = "create table widgets( " +
 function setup_db(cb) {
     var _settings = clone(settings.db1);
     delete _settings.database;
-    var client = mysql.createClient(_settings);
+    var client;
+    try {
+        client = mysql[conn_method](_settings);
+    } catch (e) {
+        client = new mysql.Client(_settings);
+        client.connect();
+    }
 
     client.query('CREATE DATABASE ' + db, function (err) {
-        if (err && err.number != mysql.ERROR_DB_CREATE_EXISTS) {
+        if (!(err && (err.number == mysql.ERROR_DB_CREATE_EXISTS || err.number == 1007))) {
             throw err;
         }
     });
     client.query('USE ' + db);
     client.query('drop table if exists widgets');
     client.query(table_sql, function (err) {
+        client.end();
         assert.ifError(err);
         cb(null, true);
-        client.end();
     });
 }
 
 function setup_db2(cb) {
     var _settings = clone(settings.db2);
     delete _settings.database;
-    var client = mysql.createClient(_settings);
+    var client;
+    try {
+        client = mysql[conn_method](_settings);
+    } catch (e) {
+        client = new mysql.Client(_settings);
+        client.connect();
+    }
 
     client.query('CREATE DATABASE ' + settings.db2.database, function (err) {
-        if (err && err.number != mysql.ERROR_DB_CREATE_EXISTS) {
+        client.end();
+        if (!(err && (err.number == mysql.ERROR_DB_CREATE_EXISTS || err.number == 1007))) {
             throw err;
         }
         cb(null);
-        client.end();
     });
 }
 
