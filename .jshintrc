@@ -18,18 +18,21 @@
     "dojo"          : false,
 
     "predef"        : [  // Extra globals.
-		    "event",
-        "exports",
-        "require",
-        "process",
-        "module",
-        "Buffer", 
-        "logger", 
-        "global",
-        "__dirname",
-        "describe",
-        "it",
-        "beforeEach"
+      "describe",
+      "it",
+      "beforeEach",
+      "event",
+      "exports",
+      "require",
+      "process",
+      "module",
+      "Buffer",
+      "logger",
+      "global",
+      "__dirname",
+      "describe",
+      "it",
+      "beforeEach"
     ],
 
 

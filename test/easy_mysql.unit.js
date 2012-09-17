@@ -17,172 +17,184 @@ describe('EasyMySQL', function () {
         });
     });
 
-    describe("execute", function () {
-        describe("valid queries", function () {
-            describe("with params", function () {
-                it("passes query and params to mysql", function (done) {
-                    var sql = "insert into widgets(name) values (?)";
+    var execute_funcs = ['execute', 'query'];
 
-                    easy_mysql.execute(sql, ['foo'], function (err, result) {
-                        assert.ifError(err);
-                        assert.strictEqual(err, null);
-                        assert.ok(result);
-                        var sql = "select * from widgets";
-                        easy_mysql.execute(sql, function (err, results) {
-                            assert.equal(results[0].name, 'foo');
-                            done();
+    execute_funcs.forEach(function (meth) {
+        describe(meth, function () {
+            describe("valid queries", function () {
+                describe("with params", function () {
+                    it("passes query and params to mysql", function (done) {
+                        var sql = "insert into widgets(name) values (?)";
+
+                        easy_mysql[meth](sql, ['foo'], function (err, result) {
+                            assert.ifError(err);
+                            assert.strictEqual(err, null);
+                            assert.ok(result);
+                            var sql = "select * from widgets";
+                            easy_mysql.execute(sql, function (err, results) {
+                                assert.equal(results[0].name, 'foo');
+                                done();
+                            });
+                        });
+                    });
+                });
+
+                describe("without params", function () {
+                    it("passes query to mysql", function (done) {
+                        var sql = "insert into widgets(name) values ('bob')";
+
+                        easy_mysql[meth](sql, function (err, result) {
+                            assert.ifError(err);
+                            assert.strictEqual(err, null);
+                            assert.ok(result);
+                            var sql = "select * from widgets";
+                            easy_mysql.execute(sql, function (err, results) {
+                                assert.equal(results[0].name, 'bob');
+                                done();
+                            });
                         });
                     });
                 });
             });
 
-            describe("without params", function () {
-                it("passes query to mysql", function (done) {
-                    var sql = "insert into widgets(name) values ('bob')";
-
-                    easy_mysql.execute(sql, function (err, result) {
-                        assert.ifError(err);
-                        assert.strictEqual(err, null);
-                        assert.ok(result);
-                        var sql = "select * from widgets";
-                        easy_mysql.execute(sql, function (err, results) {
-                            assert.equal(results[0].name, 'bob');
-                            done();
-                        });
-                    });
-                });
-            });
-        });
-
-        describe("with invalid query", function () {
-            it("calls done with error", function (done) {
-                var sql = "BOGUSselect * from widgets where id = ?";
-                easy_mysql.execute(sql, [1], function (err, result) {
-                    assert.ok(err instanceof Error);
-                    assert.strictEqual(result, null);
-                    done();
-                });
-            });
-        });
-    });
-
-    describe("get_one", function () {
-        beforeEach(function (done) {
-            var sql = "insert into widgets(name) values ('bob'), ('jim')";
-            easy_mysql.execute(sql, function (err, result) {
-                assert.ifError(err);
-                done();
-            });
-        });
-
-        describe("valid queries", function () {
-            describe("with params", function () {
-                it("passes query and params to mysql, returns single object", function (done) {
-                    var sql = "select * from widgets where name = ?";
-                    easy_mysql.get_one(sql, ['bob'], function (err, result) {
-                        assert.ifError(err);
-                        assert.strictEqual(err, null);
-                        assert.equal(result.name, 'bob');
-                        done();
-                    });
-                });
-            });
-
-            describe("without params", function (done) {
-                it("passes query to mysql, returns single object", function (done) {
-                    var sql = "select name from widgets order by name desc limit 1";
-                    easy_mysql.get_one(sql, function (err, result) {
-                        assert.ifError(err);
-                        assert.strictEqual(err, null);
-                        assert.equal(result.name, 'jim');
-                        done();
-                    });
-                });
-            });
-
-            describe("when no results found", function () {
-                it("returns null", function (done) {
-                    var sql = "select * from widgets where name = ?";
-                    easy_mysql.get_one(sql, ['not real'], function (err, result) {
-                        assert.ifError(err);
-                        assert.strictEqual(err, null);
+            describe("with invalid query", function () {
+                it("calls done with error", function (done) {
+                    var sql = "BOGUSselect * from widgets where id = ?";
+                    easy_mysql[meth](sql, [1], function (err, result) {
+                        assert.ok(err instanceof Error);
                         assert.strictEqual(result, null);
                         done();
                     });
                 });
             });
         });
+    });
 
-        describe("with invalid query", function () {
-            it("calls done with error", function (done) {
-                var sql = "BOGUSselect * from widgets";
-                easy_mysql.get_one(sql, function (err, result) {
-                    assert.ok(err instanceof Error);
-                    assert.strictEqual(result, null);
+    var get_one_funcs = ['get_one', 'getOne', 'one'];
+
+    get_one_funcs.forEach(function (getter) {
+        describe(getter, function () {
+            beforeEach(function (done) {
+                var sql = "insert into widgets(name) values ('bob'), ('jim')";
+                easy_mysql.execute(sql, function (err, result) {
+                    assert.ifError(err);
                     done();
+                });
+            });
+
+            describe("valid queries", function () {
+                describe("with params", function () {
+                    it("passes query and params to mysql, returns single object", function (done) {
+                        var sql = "select * from widgets where name = ?";
+                        easy_mysql[getter](sql, ['bob'], function (err, result) {
+                            assert.ifError(err);
+                            assert.strictEqual(err, null);
+                            assert.equal(result.name, 'bob');
+                            done();
+                        });
+                    });
+                });
+
+                describe("without params", function (done) {
+                    it("passes query to mysql, returns single object", function (done) {
+                        var sql = "select name from widgets order by name desc limit 1";
+                        easy_mysql[getter](sql, function (err, result) {
+                            assert.ifError(err);
+                            assert.strictEqual(err, null);
+                            assert.equal(result.name, 'jim');
+                            done();
+                        });
+                    });
+                });
+
+                describe("when no results found", function () {
+                    it("returns null", function (done) {
+                        var sql = "select * from widgets where name = ?";
+                        easy_mysql[getter](sql, ['not real'], function (err, result) {
+                            assert.ifError(err);
+                            assert.strictEqual(err, null);
+                            assert.strictEqual(result, null);
+                            done();
+                        });
+                    });
+                });
+            });
+
+            describe("with invalid query", function () {
+                it("calls done with error", function (done) {
+                    var sql = "BOGUSselect * from widgets";
+                    easy_mysql[getter](sql, function (err, result) {
+                        assert.ok(err instanceof Error);
+                        assert.strictEqual(result, null);
+                        done();
+                    });
                 });
             });
         });
     });
 
-    describe("get_all", function () {
-        beforeEach(function (done) {
-            var sql = "insert into widgets(name) values ('bob'), ('jim')";
-            easy_mysql.execute(sql, function (err, result) {
-                assert.ifError(err);
-                done();
-            });
-        });
+    var get_all_funcs = ['get_all', 'getAll', 'all'];
 
-        describe("valid queries", function () {
-            describe("with params", function () {
-                it("passes query and params to mysql, returns results array", function (done) {
-                    var sql = "select * from widgets where name = ?";
-                    easy_mysql.get_all(sql, ['bob'], function (err, results) {
-                        assert.ifError(err);
-                        assert.strictEqual(err, null);
-                        assert.ok(Array.isArray(results));
-                        assert.equal(results[0].name, 'bob');
-                        done();
-                    });
-                });
-            });
-
-            describe("without params", function () {
-                it("passes query to mysql, returns results array", function (done) {
-                    var sql = "select name from widgets order by name desc";
-                    easy_mysql.getAll(sql, function (err, results) {
-                        assert.ifError(err);
-                        assert.strictEqual(err, null);
-                        assert.ok(Array.isArray(results));
-                        assert.equal(results.length, 2);
-                        assert.equal(results[0].name, 'jim');
-                        done();
-                    });
-                });
-            });
-
-            describe("when no results found", function () {
-                it("returns empty array", function (done) {
-                    var sql = "select * from widgets where name = ?";
-                    easy_mysql.get_all(sql, ['not real'], function (err, results) {
-                        assert.ifError(err);
-                        assert.strictEqual(err, null);
-                        assert.ok(Array.isArray(results));
-                        assert.equal(results.length, 0);
-                        done();
-                    });
-                });
-            });
-        });
-
-        describe("with invalid query", function () {
-            it("calls done with error", function (done) {
-                var sql = "BOGUSselect * from widgets";
-                easy_mysql.get_all(sql, function (err, results) {
-                    assert.ok(err instanceof Error);
-                    assert.strictEqual(results, null);
+    get_all_funcs.forEach(function (getter) {
+        describe(getter, function () {
+            beforeEach(function (done) {
+                var sql = "insert into widgets(name) values ('bob'), ('jim')";
+                easy_mysql.execute(sql, function (err, result) {
+                    assert.ifError(err);
                     done();
+                });
+            });
+
+            describe("valid queries", function () {
+                describe("with params", function () {
+                    it("passes query and params to mysql, returns results array", function (done) {
+                        var sql = "select * from widgets where name = ?";
+                        easy_mysql[getter](sql, ['bob'], function (err, results) {
+                            assert.ifError(err);
+                            assert.strictEqual(err, null);
+                            assert.ok(Array.isArray(results));
+                            assert.equal(results[0].name, 'bob');
+                            done();
+                        });
+                    });
+                });
+
+                describe("without params", function () {
+                    it("passes query to mysql, returns results array", function (done) {
+                        var sql = "select name from widgets order by name desc";
+                        easy_mysql[getter](sql, function (err, results) {
+                            assert.ifError(err);
+                            assert.strictEqual(err, null);
+                            assert.ok(Array.isArray(results));
+                            assert.equal(results.length, 2);
+                            assert.equal(results[0].name, 'jim');
+                            done();
+                        });
+                    });
+                });
+
+                describe("when no results found", function () {
+                    it("returns empty array", function (done) {
+                        var sql = "select * from widgets where name = ?";
+                        easy_mysql[getter](sql, ['not real'], function (err, results) {
+                            assert.ifError(err);
+                            assert.strictEqual(err, null);
+                            assert.ok(Array.isArray(results));
+                            assert.equal(results.length, 0);
+                            done();
+                        });
+                    });
+                });
+            });
+
+            describe("with invalid query", function () {
+                it("calls done with error", function (done) {
+                    var sql = "BOGUSselect * from widgets";
+                    easy_mysql[getter](sql, function (err, results) {
+                        assert.ok(err instanceof Error);
+                        assert.strictEqual(results, null);
+                        done();
+                    });
                 });
             });
         });
