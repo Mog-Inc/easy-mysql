@@ -24,6 +24,10 @@ function clone(object) {
     return ret;
 }
 
+function random_string(str_len) {
+    return 'str' + Math.floor(Math.random() * 10000000000);
+}
+
 try {
     var settings = require('./settings');
 } catch (e) {
@@ -82,11 +86,12 @@ function setup_db2(cb) {
     });
 }
 
-exports.setup_db   = setup_db;
-exports.setup_db2  = setup_db2;
-exports.database   = 'easy_mysql_test';
-exports.settings   = settings;
-exports.clone      = clone;
-exports.EasyMySQL  = EasyMySQL;
-exports.EasyClient = EasyClient;
-exports.easy_pool  = easy_pool;
+exports.setup_db      = setup_db;
+exports.setup_db2     = setup_db2;
+exports.database      = 'easy_mysql_test';
+exports.settings      = settings;
+exports.clone         = clone;
+exports.random_string = random_string;
+exports.EasyMySQL     = EasyMySQL;
+exports.EasyClient    = EasyClient;
+exports.easy_pool     = easy_pool;
