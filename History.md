@@ -21,3 +21,6 @@
 
 - 0.6.5
   Cleanup, bumping generic-pool version to 2.0.2.
+
+- 0.6.6
+  Fixed intermittent stress test failure (solution: use InnoDB, not MyISAM).

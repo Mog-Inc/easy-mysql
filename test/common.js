@@ -39,7 +39,7 @@ var db = settings.db1.database;
 
 var table_sql = "create table widgets( " +
                 "id int auto_increment primary key, " +
-                "name varchar(25)) ";
+                "name varchar(25)) Engine=InnoDB ";
 
 function setup_db(cb) {
     var _settings = clone(settings.db1);

@@ -11,12 +11,11 @@ describe('EasyMySQL stress tests', function () {
     var easy_mysql;
 
     before(function (done) {
-        //easy_mysql = EasyMySQL.connect_with_easy_pool(settings.db1);
-        easy_mysql = EasyMySQL.connect(settings.db1);
+        easy_mysql = EasyMySQL.connect_with_easy_pool(settings.db1);
 
         var table_sql = "create table widgets( " +
             "id int auto_increment primary key, " +
-            "name varchar(25)) ";
+            "name varchar(25)) Engine=InnoDB";
 
         easy_mysql.execute('drop table if exists widgets', function(err, result) {
             assert.ifError(err);
