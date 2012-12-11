@@ -9,11 +9,20 @@ var setup_db  = common.setup_db;
 describe('EasyMySQL', function () {
     var easy_mysql;
 
-    beforeEach(function (done) {
+    before(function (done) {
         setup_db(function (err, result) {
             assert.ifError(err);
             easy_mysql = EasyMySQL.connect(settings.db1);
             done();
+        });
+    });
+
+    beforeEach(function(done) {
+        easy_mysql.execute("truncate widgets", function(err, result) {
+            assert.ifError(err);
+            setTimeout(function() {
+                done();
+            }, 10);
         });
     });
 

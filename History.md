@@ -18,3 +18,6 @@
 
 - 0.6.4
   Adding compatibility with node-mysql 0.9.1 (to be deprecated) and 2.0.0-alpha.
+
+- 0.6.5
+  Cleanup, bumping generic-pool version to 2.0.2.
