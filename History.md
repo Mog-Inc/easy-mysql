@@ -24,3 +24,6 @@
 
 - 0.6.6
   Fixed intermittent stress test failure (solution: use InnoDB, not MyISAM).
+
+- 1.0.0
+  Version bump.  This has been stable for a while now.
