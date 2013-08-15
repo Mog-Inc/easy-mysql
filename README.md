@@ -67,9 +67,9 @@ You can connect three different ways with EasyMySQL:
 #### Direct Connect Example
 
     var settings = {
-          user     : 'myuser',
-          password : 'mypass',
-          database : 'mydb'
+        user     : 'myuser',
+        password : 'mypass',
+        database : 'mydb'
     };
  
     var easy_mysql = EasyMySQL.connect(settings);
@@ -80,6 +80,7 @@ You can connect three different ways with EasyMySQL:
     var easy_mysql = EasyMySQL.connect_with_pool(pool);
 
 #### Built-in Pool Example
+
     var settings = {
         user      : 'myuser',
         password  : 'mypass',
@@ -88,6 +89,25 @@ You can connect three different ways with EasyMySQL:
     };
 
     var easy_mysql = EasyMySQL.connect_with_easy_pool(settings);
+
+#### Logging
+
+You can specify a logger to log error events (more event types may be added later).
+
+    var settings = {
+        user     : 'myuser',
+        password : 'mypass',
+        database : 'mydb',
+        logging: {
+            logger: my_logger,
+            events: {
+                error: {level: 'warn'}
+            }
+        }
+    };
+
+You must pass in your own logger and it must have a function with the same
+name as the `level` you specify.
 
 
 ### Instance methods

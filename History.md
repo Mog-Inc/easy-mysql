@@ -27,3 +27,6 @@
 
 - 1.0.0
   Version bump.  This has been stable for a while now.
+
+- 1.0.1
+  Adding ability to add a logger to log errors returned from MySQL.

@@ -1,10 +1,10 @@
 {
-  "name"        : "easy-mysql",
-  "description" : "Light MySQL query wrapper with connection pooling.",
-  "version"     : "1.0.0",
-  "author"      : "MOG, Inc.",
+  "name": "easy-mysql",
+  "description": "Light MySQL query wrapper with connection pooling.",
+  "version": "1.0.1",
+  "author": "MOG, Inc.",
   "contributors": [
-    { "name": "Bryan Donovan" }
+    {"name": "Bryan Donovan"}
   ],
   "homepage": "http://mog.com",
   "repository": {
@@ -12,19 +12,19 @@
     "url": "git://github.com:Mog-Inc/easy-mysql.git"
    },
   "dependencies": {
-    "generic-pool" : "2.0.2",
-    "mysql"        : ">=0.9.1"
+    "generic-pool": "2.0.2",
+    "mysql": ">=0.9.1"
   },
   "devDependencies": {
-    "async"  : "0.1.22",
-    "mocha"  : "0.14.0",
-    "sinon"  : ">=1.2.0",
-    "jshint" : ">=0.5.5",
-    "jsdoc-toolkit"  : ">=0.0.2"
+    "async": "0.1.22",
+    "mocha": "1.12.0",
+    "sinon": "1.6.0",
+    "jshint": "2.0.1",
+    "jsdoc-toolkit": ">=0.0.2"
   },
-  "keywords" : ["mysql", "nodejs"],
-  "main"     : "index",
-  "scripts"  : {},
-  "bin"      : {},
-  "engines": { "node": ">= 0.4.10" }
+  "keywords": ["mysql", "nodejs"],
+  "main": "index",
+  "scripts": {},
+  "bin": {},
+  "engines": {"node": ">= 0.4.10"}
 }

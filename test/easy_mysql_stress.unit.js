@@ -2,10 +2,7 @@ var async = require('async');
 var assert = require('assert');
 var common = require('./common');
 var EasyMySQL = common.EasyMySQL;
-var easy_pool = common.easy_pool;
 var settings = common.settings;
-var clone = common.clone;
-var setup_db = common.setup_db;
 
 describe('EasyMySQL stress tests', function () {
     var easy_mysql;
@@ -17,21 +14,15 @@ describe('EasyMySQL stress tests', function () {
             "id int auto_increment primary key, " +
             "name varchar(25)) Engine=InnoDB";
 
-        easy_mysql.execute('drop table if exists widgets', function (err, result) {
+        easy_mysql.execute('drop table if exists widgets', function (err) {
             assert.ifError(err);
 
-            easy_mysql.execute(table_sql, function (err, result) {
-                assert.ifError(err);
-                done();
-            });
+            easy_mysql.execute(table_sql, done);
         });
     });
 
     beforeEach(function (done) {
-        easy_mysql.execute('truncate widgets', function (err, result) {
-            assert.ifError(err);
-            done();
-        });
+        easy_mysql.execute('truncate widgets', done);
     });
 
     describe('inserting and selecting', function () {
@@ -46,7 +37,7 @@ describe('EasyMySQL stress tests', function () {
             async.forEachSeries(test_runs, function (test_run, async_cb) {
                 var name = common.random_string();
                 var sql = "insert into widgets(name) values (?)";
-                easy_mysql.execute(sql, [name], function (err, result) {
+                easy_mysql.execute(sql, [name], function (err) {
                     if (err) { return async_cb(err); }
 
                     sql = "select * from widgets where name = ?";
@@ -55,10 +46,7 @@ describe('EasyMySQL stress tests', function () {
                         async_cb(err, result);
                     });
                 });
-            }, function (err) {
-                assert.ifError(err);
-                done();
-            });
+            }, done);
         });
 
         it('lets us insert and get results multiple times, again', function (done) {
@@ -72,7 +60,7 @@ describe('EasyMySQL stress tests', function () {
             async.forEachSeries(test_runs, function (test_run, async_cb) {
                 var name = common.random_string();
                 var sql = "insert into widgets(name) values (?)";
-                easy_mysql.execute(sql, [name], function (err, result) {
+                easy_mysql.execute(sql, [name], function (err) {
                     if (err) { return async_cb(err); }
 
                     sql = "select * from widgets where name = ?";
@@ -81,10 +69,7 @@ describe('EasyMySQL stress tests', function () {
                         async_cb(err, result);
                     });
                 });
-            }, function (err) {
-                assert.ifError(err);
-                done();
-            });
+            }, done);
         });
     });
 });

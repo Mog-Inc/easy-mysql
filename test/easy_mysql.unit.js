@@ -1,6 +1,8 @@
 var assert = require('assert');
+var sinon = require('sinon');
 var common = require('./common');
 var EasyMySQL = common.EasyMySQL;
+var EasyClient = require('../lib/easy_client');
 var easy_pool = common.easy_pool;
 var settings = common.settings;
 var clone = common.clone;
@@ -10,7 +12,7 @@ describe('EasyMySQL', function () {
     var easy_mysql;
 
     before(function (done) {
-        setup_db(function (err, result) {
+        setup_db(function (err) {
             assert.ifError(err);
             easy_mysql = EasyMySQL.connect(settings.db1);
             done();
@@ -18,7 +20,7 @@ describe('EasyMySQL', function () {
     });
 
     beforeEach(function (done) {
-        easy_mysql.execute("truncate widgets", function (err, result) {
+        easy_mysql.execute("truncate widgets", function (err) {
             assert.ifError(err);
             setTimeout(function () {
                 done();
@@ -85,7 +87,7 @@ describe('EasyMySQL', function () {
         describe(getter, function () {
             beforeEach(function (done) {
                 var sql = "insert into widgets(name) values ('bob'), ('jim')";
-                easy_mysql.execute(sql, function (err, result) {
+                easy_mysql.execute(sql, function (err) {
                     assert.ifError(err);
                     done();
                 });
@@ -104,7 +106,7 @@ describe('EasyMySQL', function () {
                     });
                 });
 
-                describe("without params", function (done) {
+                describe("without params", function () {
                     it("passes query to mysql, returns single object", function (done) {
                         var sql = "select name from widgets order by name desc limit 1";
                         easy_mysql[getter](sql, function (err, result) {
@@ -148,7 +150,7 @@ describe('EasyMySQL', function () {
         describe(getter, function () {
             beforeEach(function (done) {
                 var sql = "insert into widgets(name) values ('bob'), ('jim')";
-                easy_mysql.execute(sql, function (err, result) {
+                easy_mysql.execute(sql, function (err) {
                     assert.ifError(err);
                     done();
                 });
@@ -209,12 +211,63 @@ describe('EasyMySQL', function () {
         });
     });
 
-    describe("connecting with pools", function () {
+    describe("logging", function () {
+        var log_settings;
+        var easy_client;
+
         beforeEach(function (done) {
-            setup_db(function (err, result) {
+            log_settings = clone(settings.db1);
+            log_settings.logging = {
+                logger: common.fake_logger,
+                events: {
+                    error: {level: 'warn'}
+                }
+            };
+
+            easy_mysql = EasyMySQL.connect(log_settings);
+
+            EasyClient.fetch(log_settings, function (err, result) {
                 assert.ifError(err);
+                easy_client = result;
+
+                sinon.stub(EasyClient, 'fetch', function (settings, cb) {
+                    cb(null, easy_client);
+                });
+
                 done();
             });
+        });
+
+        afterEach(function () {
+            EasyClient.fetch.restore();
+        });
+
+        it("lets us specify a logger in settings", function () {
+            assert.ok(easy_mysql.logging);
+        });
+
+        it("logs error events at specified level", function (done) {
+            sinon.spy(common.fake_logger, 'warn');
+
+            var error = new Error('foo');
+
+            sinon.stub(easy_client, 'query', function (sql, query_params, cb) {
+                cb(error);
+            });
+
+            easy_mysql.execute("select * from widgets", function (err) {
+                assert.equal(err, error);
+                assert.ok(common.fake_logger.warn.called);
+                easy_client.query.restore();
+                common.fake_logger.warn.restore();
+                done();
+            });
+        });
+    });
+
+    describe("connecting with pools", function () {
+        beforeEach(function (done) {
+            setup_db(done);
         });
 
         describe("EasyMysql.connect_with_pool", function () {

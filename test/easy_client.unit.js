@@ -20,10 +20,7 @@ var assert_correct_settings = function (client, expected_settings) {
 
 describe("EasyClient", function () {
     beforeEach(function (done) {
-        setup_db(function (err, result) {
-            assert.ifError(err);
-            done();
-        });
+        setup_db(done);
     });
 
     describe("EasyClient.fetch", function () {

@@ -81,5 +81,6 @@
     "sub"           : false,  // Tolerate all forms of subscript notation besides dot notation e.g. `dict['key']` instead of `dict.key`.
     "trailing"      : true,   // Prohibit trailing whitespaces.
     "white"         : true,  // Check against strict whitespace and indentation rules.
-    "indent"        : 4       // ignored because "white" is false.
+    "indent"        : 4,      // ignored because "white" is false.
+    "unused"        : true
 }

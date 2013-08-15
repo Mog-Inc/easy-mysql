@@ -1,4 +1,3 @@
-var path = require('path');
 var mysql = require('mysql');
 var assert = require('assert');
 
@@ -24,7 +23,7 @@ function clone(object) {
     return ret;
 }
 
-function random_string(str_len) {
+function random_string() {
     return 'str' + Math.floor(Math.random() * 10000000000);
 }
 
@@ -86,6 +85,13 @@ function setup_db2(cb) {
     });
 }
 
+var fake_logger = {
+    debug: function () {},
+    info: function () {},
+    warn: function () {},
+    error: function () {}
+};
+
 exports.setup_db      = setup_db;
 exports.setup_db2     = setup_db2;
 exports.database      = 'easy_mysql_test';
@@ -95,3 +101,4 @@ exports.random_string = random_string;
 exports.EasyMySQL     = EasyMySQL;
 exports.EasyClient    = EasyClient;
 exports.easy_pool     = easy_pool;
+exports.fake_logger   = fake_logger;
