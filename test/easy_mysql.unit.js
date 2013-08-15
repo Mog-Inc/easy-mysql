@@ -1,10 +1,10 @@
-var assert    = require('assert');
-var common    = require('./common');
+var assert = require('assert');
+var common = require('./common');
 var EasyMySQL = common.EasyMySQL;
 var easy_pool = common.easy_pool;
-var settings  = common.settings;
-var clone     = common.clone;
-var setup_db  = common.setup_db;
+var settings = common.settings;
+var clone = common.clone;
+var setup_db = common.setup_db;
 
 describe('EasyMySQL', function () {
     var easy_mysql;
@@ -17,10 +17,10 @@ describe('EasyMySQL', function () {
         });
     });
 
-    beforeEach(function(done) {
-        easy_mysql.execute("truncate widgets", function(err, result) {
+    beforeEach(function (done) {
+        easy_mysql.execute("truncate widgets", function (err, result) {
             assert.ifError(err);
-            setTimeout(function() {
+            setTimeout(function () {
                 done();
             }, 10);
         });

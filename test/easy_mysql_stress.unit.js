@@ -1,11 +1,11 @@
-var async     = require('async');
-var assert    = require('assert');
-var common    = require('./common');
+var async = require('async');
+var assert = require('assert');
+var common = require('./common');
 var EasyMySQL = common.EasyMySQL;
 var easy_pool = common.easy_pool;
-var settings  = common.settings;
-var clone     = common.clone;
-var setup_db  = common.setup_db;
+var settings = common.settings;
+var clone = common.clone;
+var setup_db = common.setup_db;
 
 describe('EasyMySQL stress tests', function () {
     var easy_mysql;
@@ -17,7 +17,7 @@ describe('EasyMySQL stress tests', function () {
             "id int auto_increment primary key, " +
             "name varchar(25)) Engine=InnoDB";
 
-        easy_mysql.execute('drop table if exists widgets', function(err, result) {
+        easy_mysql.execute('drop table if exists widgets', function (err, result) {
             assert.ifError(err);
 
             easy_mysql.execute(table_sql, function (err, result) {
@@ -27,8 +27,8 @@ describe('EasyMySQL stress tests', function () {
         });
     });
 
-    beforeEach(function(done) {
-        easy_mysql.execute('truncate widgets', function(err, result) {
+    beforeEach(function (done) {
+        easy_mysql.execute('truncate widgets', function (err, result) {
             assert.ifError(err);
             done();
         });

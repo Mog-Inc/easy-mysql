@@ -15,5 +15,5 @@ module.exports = {
         user     : 'root',
         password : null,
         database : 'easy_mysql_test2'
-    },
+    }
 };

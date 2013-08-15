@@ -1,11 +1,11 @@
-var assert     = require('assert');
-var sinon      = require('sinon');
-var common     = require('./common');
+var assert = require('assert');
+var sinon = require('sinon');
+var common = require('./common');
 var EasyClient = common.EasyClient;
-var easy_pool  = common.easy_pool;
-var settings   = common.settings;
-var clone      = common.clone;
-var setup_db   = common.setup_db;
+var easy_pool = common.easy_pool;
+var settings = common.settings;
+var clone = common.clone;
+var setup_db = common.setup_db;
 
 var assert_correct_settings = function (client, expected_settings) {
     var config = client;
