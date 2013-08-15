@@ -30,3 +30,6 @@
 
 - 1.0.1
   Adding ability to add a logger to log errors returned from MySQL.
+
+- 1.0.2
+  Making logging work when using EasyMySQL.connect_with_pool().

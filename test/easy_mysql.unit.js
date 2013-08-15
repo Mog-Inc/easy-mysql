@@ -270,6 +270,19 @@ describe('EasyMySQL', function () {
             setup_db(done);
         });
 
+        it("lets us specify a logger in settings", function () {
+            var pool = easy_pool.fetch(settings.db1);
+            var logging = {
+                logger: common.fake_logger,
+                events: {
+                    error: {level: 'warn'}
+                }
+            };
+
+            easy_mysql = EasyMySQL.connect_with_pool(pool, {logging: logging});
+            assert.ok(easy_mysql.logging);
+        });
+
         describe("EasyMysql.connect_with_pool", function () {
             it("lets us execute queries", function (done) {
                 var pool = easy_pool.fetch(settings.db1);
