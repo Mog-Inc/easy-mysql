@@ -33,3 +33,6 @@
 
 - 1.0.2
   Making logging work when using EasyMySQL.connect_with_pool().
+
+- 1.0.3
+  Switching to Istanbul for test coverage.

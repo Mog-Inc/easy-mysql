@@ -10,17 +10,19 @@
   "repository": {
     "type": "git",
     "url": "git://github.com:Mog-Inc/easy-mysql.git"
-   },
+  },
   "dependencies": {
     "generic-pool": "2.0.2",
     "mysql": ">=0.9.1"
   },
   "devDependencies": {
     "async": "0.1.22",
-    "mocha": "1.12.0",
-    "sinon": "1.6.0",
+    "istanbul": "0.1.43",
+    "jsdoc-toolkit": ">=0.0.2",
     "jshint": "2.0.1",
-    "jsdoc-toolkit": ">=0.0.2"
+    "mocha": "1.12.0",
+    "optimist": "0.6.0",
+    "sinon": "1.6.0"
   },
   "keywords": ["mysql", "nodejs"],
   "main": "index",

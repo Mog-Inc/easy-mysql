@@ -1,22 +1,29 @@
 PACKAGE = easy_mysql
-NODEJS = $(if $(shell test -f /usr/bin/nodejs && echo "true"),nodejs,node)
 BASE = .
 
-all: test lint doc
 
-test:
-	./node_modules/.bin/mocha
+ISTANBUL = ./node_modules/.bin/istanbul
+TEST_COMMAND = NODE_ENV=test ./node_modules/.bin/mocha
+COVERAGE_OPTS = --lines 87 --statements 87 --branches 77 --functions 95
 
-test-cov: lib-cov
-	EASY_MYSQL_JSCOV=1 ./node_modules/.bin/mocha --reporter html-cov > coverage.html && echo 'coverage saved to coverage.html'
+main: lint test
 
-lib-cov:
-	@rm -fr ./$@
-	@jscoverage lib $@
+cover:
+	$(ISTANBUL) cover test/run.js -- -T unit,functional
+
+check-coverage:
+	$(ISTANBUL) check-coverage $(COVERAGE_OPTS)
+
+test: cover check-coverage
+
+
+test-cov: cover check-coverage
+	open coverage/lcov-report/index.html
 
 lint:
-	./node_modules/.bin/jshint lib test --config $(BASE)/.jshintrc && echo "Lint Done"
-	
+	./node_modules/.bin/jshint ./lib --config $(BASE)/.jshintrc && \
+	./node_modules/.bin/jshint ./test --config $(BASE)/.jshintrc
+
 doc:
 	./node_modules/jsdoc-toolkit/app/run.js -t=./node_modules/jsdoc-toolkit/templates/jsdoc -d=./doc ./lib
 
